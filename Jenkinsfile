@@ -12,7 +12,7 @@ pipeline {
                 script {
                     echo '清空工作区并拉取代码'
                     git(
-                        url: 'https://github.com/Aci1998/SeleniumBase_Ac.git',
+                        url: 'https://github.com/Aci1998/SeleniumBase.git',
                         credentialsId: 'ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIKZrTo4rmz6wKmzbeTrRhsAilHlaXF0GCKCwRZORJssM',
                         branch: 'master',
                         extensions: [
