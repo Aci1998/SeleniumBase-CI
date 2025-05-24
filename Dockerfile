@@ -1,5 +1,5 @@
 # 基础镜像
-FROM python:3.10-slim
+FROM registry.docker-cn.com/library/python:3.10-slim
 
 # 设置环境变量
 ENV LANG C.UTF-8
