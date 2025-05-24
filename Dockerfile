@@ -1,5 +1,5 @@
 # 使用阿里云镜像源
-FROM python:3.12.10-bookworm
+FROM python:3.12.10
 
 # 设置时区和编码
 ENV LANG C.UTF-8
