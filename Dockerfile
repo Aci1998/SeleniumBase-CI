@@ -1,5 +1,5 @@
 # 使用国内代理拉取 python 镜像，加速构建
-FROM dockerhub.m.daocloud.io/library/python:3.10-slim
+FROM python:3.10-slim
 
 # 设置环境变量
 ENV LANG C.UTF-8
