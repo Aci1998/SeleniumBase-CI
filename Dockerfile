@@ -1,46 +1,37 @@
-# 使用国内代理拉取 python 镜像，加速构建
-FROM python:3.10-slim
+# 使用阿里云镜像源
+FROM registry.cn-hangzhou.aliyuncs.com/library/python:3.10-slim
 
-# 设置环境变量
+# 设置时区和编码
 ENV LANG C.UTF-8
-ENV TZ Asia/Shanghai
+ENV TZ=Asia/Shanghai
+RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
 
-# 替换 apt 源为阿里云，加速依赖安装
+# 替换apt源为阿里云
 RUN sed -i 's|http://deb.debian.org|https://mirrors.aliyun.com|g' /etc/apt/sources.list && \
     apt-get update && apt-get install -y \
     wget curl unzip gnupg ca-certificates \
     build-essential \
     libnss3 libgconf-2-4 libxi6 libxrandr2 libxcursor1 libxcomposite1 libasound2 libatk1.0-0 libgtk-3-0 \
-    openssh-client \
     && rm -rf /var/lib/apt/lists/*
 
-# 安装 pip 最新版本并配置为使用清华源
-RUN curl https://bootstrap.pypa.io/get-pip.py -o get-pip.py && \
-    python get-pip.py && rm get-pip.py && \
-    pip config set global.index-url https://pypi.tuna.tsinghua.edu.cn/simple
+# 使用清华pip源
+RUN pip config set global.index-url https://pypi.tuna.tsinghua.edu.cn/simple
 
-# 安装 Google Chrome
+# 安装Chrome
 RUN wget -q -O - https://dl.google.com/linux/linux_signing_key.pub | apt-key add - && \
     echo "deb [arch=amd64] http://dl.google.com/linux/chrome/deb/ stable main" > /etc/apt/sources.list.d/google.list && \
-    apt-get update && apt-get install -y google-chrome-stable && \
+    apt-get update && apt-get install -y google-chrome-stable --no-install-recommends && \
     rm -rf /var/lib/apt/lists/*
 
-# 安装 ChromeDriver（自动匹配版本）
-RUN CHROME_VERSION=$(google-chrome --version | grep -oP '\d+\.\d+\.\d+') && \
-    DRIVER_VERSION=$(curl -s https://chromedriver.storage.googleapis.com/LATEST_RELEASE_$CHROME_VERSION) && \
-    wget -O /tmp/chromedriver.zip https://chromedriver.storage.googleapis.com/${DRIVER_VERSION}/chromedriver_linux64.zip && \
+# 安装匹配的ChromeDriver
+RUN CHROME_VERSION=$(google-chrome --version | grep -oE '[0-9]+\.[0-9]+\.[0-9]+') && \
+    wget -O /tmp/chromedriver.zip \
+    https://chromedriver.storage.googleapis.com/$(curl -sS https://chromedriver.storage.googleapis.com/LATEST_RELEASE_${CHROME_VERSION%.*.*})/chromedriver_linux64.zip && \
     unzip /tmp/chromedriver.zip -d /usr/local/bin/ && \
-    chmod +x /usr/local/bin/chromedriver && \
-    rm /tmp/chromedriver.zip
+    rm /tmp/chromedriver.zip && \
+    chmod +x /usr/local/bin/chromedriver
 
-# 创建工作目录
 WORKDIR /app
-
-# 复制项目
-COPY . /app
-
-# 安装依赖
+COPY . .
 RUN pip install --no-cache-dir -r requirements.txt
-
-# 设置默认启动命令（可选）
 CMD ["pytest", "--maxfail=1", "--disable-warnings"]
