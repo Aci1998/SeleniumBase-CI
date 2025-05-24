@@ -1,21 +1,23 @@
-# 基础镜像
-FROM registry.docker-cn.com/library/python:3.10-slim
+# 使用国内代理拉取 python 镜像，加速构建
+FROM dockerproxy.com/library/python:3.10-slim
 
 # 设置环境变量
 ENV LANG C.UTF-8
 ENV TZ Asia/Shanghai
 
-# 安装系统依赖
-RUN apt-get update && apt-get install -y \
+# 替换 apt 源为阿里云，加速依赖安装
+RUN sed -i 's|http://deb.debian.org|https://mirrors.aliyun.com|g' /etc/apt/sources.list && \
+    apt-get update && apt-get install -y \
     wget curl unzip gnupg ca-certificates \
     build-essential \
     libnss3 libgconf-2-4 libxi6 libxrandr2 libxcursor1 libxcomposite1 libasound2 libatk1.0-0 libgtk-3-0 \
     openssh-client \
     && rm -rf /var/lib/apt/lists/*
 
-# 安装 pip 最新版本（含 ssl）
+# 安装 pip 最新版本并配置为使用清华源
 RUN curl https://bootstrap.pypa.io/get-pip.py -o get-pip.py && \
-    python get-pip.py && rm get-pip.py
+    python get-pip.py && rm get-pip.py && \
+    pip config set global.index-url https://pypi.tuna.tsinghua.edu.cn/simple
 
 # 安装 Google Chrome
 RUN wget -q -O - https://dl.google.com/linux/linux_signing_key.pub | apt-key add - && \
