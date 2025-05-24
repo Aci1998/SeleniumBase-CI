@@ -1,5 +1,5 @@
 # 使用阿里云镜像源
-FROM registry.cn-hangzhou.aliyuncs.com/library/python:3.10-slim
+FROM python:3.12.10-bookworm
 
 # 设置时区和编码
 ENV LANG C.UTF-8
