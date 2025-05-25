@@ -54,7 +54,8 @@ WORKDIR /app
 COPY . /app
 
 # 安装项目依赖
-RUN pip install --no-cache-dir -r requirements.txt
+RUN pip install --no-cache-dir seleniumbase && \
+    pip install --no-cache-dir -r requirements.txt
 
 # 默认命令（可根据需要替换）
 CMD ["pytest", "--maxfail=1", "--disable-warnings"]
