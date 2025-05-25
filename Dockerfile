@@ -44,13 +44,10 @@ RUN wget -q -O - https://dl.google.com/linux/linux_signing_key.pub | apt-key add
     apt-get update && apt-get install -y --no-install-recommends google-chrome-stable && \
     rm -rf /var/lib/apt/lists/*
 
-# 安装 ChromeDriver
-RUN CHROME_VERSION=$(google-chrome --version | awk '{print $3}' | cut -d'.' -f1-3) && \
-    DRIVER_VERSION=$(curl -s https://chromedriver.storage.googleapis.com/LATEST_RELEASE_${CHROME_VERSION}) && \
-    wget -O /tmp/chromedriver.zip https://chromedriver.storage.googleapis.com/${DRIVER_VERSION}/chromedriver_linux64.zip && \
-    unzip /tmp/chromedriver.zip -d /usr/local/bin/ && \
-    chmod +x /usr/local/bin/chromedriver && \
-    rm /tmp/chromedriver.zip
+# 安装 ChromeDriver（改用 webdriver-manager 自动管理，无需手动安装）
+# 如果你的测试代码使用 webdriver-manager 或 SeleniumBase 的自动驱动管理，这部分可以省略。
+
+# 如果仍需手动安装固定版本，请在此处添加脚本。
 
 # 创建工作目录并复制项目
 WORKDIR /app
