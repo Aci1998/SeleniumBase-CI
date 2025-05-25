@@ -58,4 +58,6 @@ RUN pip install --no-cache-dir seleniumbase && \
     pip install --no-cache-dir -r requirements.txt
 
 # 默认命令（可根据需要替换）
-CMD ["pytest", "--maxfail=1", "--disable-warnings"]
+CMD ["pytest", "test_case/", "--junitxml=/app/test_results.xml", "--html=/app/report.html", "--self-contained-html"]
+
+# CMD ["pytest", "--maxfail=1", "--disable-warnings"]
