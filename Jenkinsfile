@@ -25,7 +25,7 @@ pipeline {
                         ],
                         userRemoteConfigs: [[
                             url: 'git@github.com:Aci1998/SeleniumBase-CI.git',
-                            credentialsId: 'your-credentials-id' // 替换为你的 Jenkins 凭证 ID
+                            credentialsId: '92de817e-eb61-46f8-83d9-47972d8dce12' // 替换为你的 Jenkins 凭证 ID
                         ]]
                     ])
 
@@ -55,7 +55,7 @@ pipeline {
                         docker buildx version || echo "⚠️ buildx 未安装"
                         docker buildx ls || echo "⚠️ 无法列出 buildx 实例"
 
-                        docker buildx build --load -t seleniumbase-test:latest .
+                        sh 'docker build -t seleniumbase-test:latest .'
                     '''
                 }
             }
