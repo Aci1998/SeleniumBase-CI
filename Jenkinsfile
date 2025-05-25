@@ -30,7 +30,7 @@ pipeline {
                             [$class: 'GitLFSPull'] // 如果使用 Git LFS
                         ],
                         userRemoteConfigs: [[
-                            url: 'https://github.com/Aci1998/SeleniumBase.git',
+                            url: 'git@github.com:Aci1998/SeleniumBase-CI.git',
                             credentialsId: 'your-credentials-id' // 替换为 Jenkins 中配置的凭证 ID
                         ]]
                     ])
