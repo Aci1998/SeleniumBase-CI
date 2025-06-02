@@ -1,1 +1,1 @@
-# SeleniumBase
+# SeleniumBase-CI
